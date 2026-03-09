@@ -88,7 +88,9 @@ export default function PiSnakeGame() {
     try {
       audioRef.current.currentTime = 0;
       void audioRef.current.play();
-    } catch {}
+    } catch {
+      // Ignorar errores de reproducción automática
+    }
   };
 
   const updateDirection = (nextDirection: Direction) => {
@@ -100,10 +102,31 @@ export default function PiSnakeGame() {
   };
 
   const refreshGamepadState = () => {
-    const pads = navigator.getGamepads ? navigator.getGamepads() : [];
+    if (typeof navigator === "undefined" || !navigator.getGamepads) {
+      setIsGamepadConnected(false);
+      return [];
+    }
+
+    const pads = navigator.getGamepads();
     const connected = Array.from(pads || []).some(Boolean);
     setIsGamepadConnected(connected);
     return pads;
+  };
+
+  const resetGame = () => {
+    const initialDirection = { x: 1, y: 0 };
+
+    setSnake([
+      { x: 5, y: 5 },
+      { x: 4, y: 5 },
+    ]);
+    setFood({ x: 8, y: 5 });
+    setDirection(initialDirection);
+    directionRef.current = initialDirection;
+    setGameOver(false);
+    setDigitsUnlocked(1);
+    refreshGamepadState();
+    playSound(startAudioRef);
   };
 
   useEffect(() => {
@@ -203,7 +226,7 @@ export default function PiSnakeGame() {
   useEffect(() => {
     if (gameOver) return;
 
-    const interval = setInterval(() => {
+    const interval = window.setInterval(() => {
       setSnake((prevSnake) => {
         const head = prevSnake[0];
         const currentDirection = directionRef.current;
@@ -243,28 +266,16 @@ export default function PiSnakeGame() {
       });
     }, GAME_SPEED);
 
-    return () => clearInterval(interval);
+    return () => window.clearInterval(interval);
   }, [food, gameOver, soundEnabled]);
-
-  const resetGame = () => {
-    const initialDirection = { x: 1, y: 0 };
-
-    setSnake([
-      { x: 5, y: 5 },
-      { x: 4, y: 5 },
-    ]);
-    setFood({ x: 8, y: 5 });
-    setDirection(initialDirection);
-    directionRef.current = initialDirection;
-    setGameOver(false);
-    setDigitsUnlocked(1);
-    refreshGamepadState();
-    playSound(startAudioRef);
-  };
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     const touch = e.touches[0];
     touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    e.preventDefault();
   };
 
   const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
@@ -279,6 +290,7 @@ export default function PiSnakeGame() {
       Math.abs(deltaX) < SWIPE_THRESHOLD &&
       Math.abs(deltaY) < SWIPE_THRESHOLD
     ) {
+      touchStartRef.current = null;
       return;
     }
 
@@ -289,6 +301,8 @@ export default function PiSnakeGame() {
       if (deltaY > 0) updateDirection({ x: 0, y: 1 });
       else updateDirection({ x: 0, y: -1 });
     }
+
+    touchStartRef.current = null;
   };
 
   return (
@@ -307,11 +321,25 @@ export default function PiSnakeGame() {
 
         <div className="grid gap-6 lg:grid-cols-[1fr_320px] lg:items-start">
           <div>
+            <div className="mb-4 flex flex-wrap gap-3">
+              <button onClick={resetGame} className="btn-primary">
+                Reiniciar juego
+              </button>
+
+              <button
+                onClick={() => setSoundEnabled((prev) => !prev)}
+                className="btn-secondary"
+              >
+                {soundEnabled ? "Desactivar sonido" : "Activar sonido"}
+              </button>
+            </div>
+
             <div
-              className="game-board-shell p-3 md:p-4 touch-none select-none"
+              className="game-board-shell touch-none select-none p-3 md:p-4"
+              style={{ touchAction: "none" }}
               onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
-              onTouchMove={(e) => e.preventDefault()}
               onClick={() => refreshGamepadState()}
             >
               <div className="mb-3 flex items-center justify-between gap-3 rounded-2xl bg-white/10 px-4 py-3 text-sm font-bold text-white/90 sm:text-base">
@@ -377,6 +405,12 @@ export default function PiSnakeGame() {
             <p className="mt-3 text-center text-sm font-semibold text-white/80 sm:hidden">
               Desliza sobre el tablero para cambiar de dirección
             </p>
+
+            {gameOver && (
+              <div className="mt-4 rounded-2xl border border-red-300/20 bg-red-400/15 p-4 font-bold text-white">
+                Fin del juego. Presiona “Reiniciar juego” para volver a jugar.
+              </div>
+            )}
           </div>
 
           <aside className="space-y-4">
@@ -391,18 +425,6 @@ export default function PiSnakeGame() {
 
             <div className="rounded-2xl border border-white/15 bg-white/10 p-4">
               <p className="text-sm font-extrabold uppercase tracking-[0.15em] text-white/80">
-                Sonido
-              </p>
-              <button
-                onClick={() => setSoundEnabled((prev) => !prev)}
-                className="btn-secondary mt-3 w-full"
-              >
-                {soundEnabled ? "Desactivar sonido" : "Activar sonido"}
-              </button>
-            </div>
-
-            <div className="rounded-2xl border border-white/15 bg-white/10 p-4">
-              <p className="text-sm font-extrabold uppercase tracking-[0.15em] text-white/80">
                 Estado del control
               </p>
               <p className="mt-2 font-semibold text-white/95">
@@ -411,7 +433,8 @@ export default function PiSnakeGame() {
                   : "Sin control conectado"}
               </p>
               <p className="mt-2 text-sm text-white/75">
-                Si no responde, presiona cualquier botón del control y da clic en el tablero.
+                Si no responde, presiona cualquier botón del control y da clic
+                en el tablero.
               </p>
             </div>
 
@@ -429,16 +452,6 @@ export default function PiSnakeGame() {
                 Deslizar en pantalla táctil
               </p>
             </div>
-
-            <button onClick={resetGame} className="btn-primary hidden w-full sm:inline-flex">
-              Reiniciar juego
-            </button>
-
-            {gameOver && (
-              <div className="rounded-2xl border border-red-300/20 bg-red-400/15 p-4 font-bold text-white">
-                Fin del juego. Reinicia para volver a intentarlo.
-              </div>
-            )}
           </aside>
         </div>
       </div>
