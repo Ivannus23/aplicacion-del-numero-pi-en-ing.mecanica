@@ -308,9 +308,10 @@ export default function PiSnakeGame() {
         <div className="grid gap-6 lg:grid-cols-[1fr_320px] lg:items-start">
           <div>
             <div
-              className="game-board-shell p-3 md:p-4"
+              className="game-board-shell p-3 md:p-4 touch-none select-none"
               onTouchStart={handleTouchStart}
               onTouchEnd={handleTouchEnd}
+              onTouchMove={(e) => e.preventDefault()}
               onClick={() => refreshGamepadState()}
             >
               <div className="mb-3 flex items-center justify-between gap-3 rounded-2xl bg-white/10 px-4 py-3 text-sm font-bold text-white/90 sm:text-base">
