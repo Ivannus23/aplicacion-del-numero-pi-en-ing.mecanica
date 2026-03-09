@@ -1,37 +1,59 @@
+import Image from "next/image";
+
+const logos = [
+  "/logo-uan.png",
+  "/logo-uacbi.png",
+  "/LOGO-INGE-MECANICA.png",
+  "/logo-proyecto.png",
+  "/pi-logo.png",
+];
+
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.18),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.16),transparent_30%)]" />
-      <div className="relative mx-auto max-w-7xl px-6 py-20 md:py-28">
-        <div className="max-w-3xl">
-          <p className="mb-4 inline-block rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-1 text-sm text-cyan-200">
+    <section className="section-shell px-6 py-14 md:py-20">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-8 flex flex-wrap items-center gap-4">
+          {logos.map((src, index) => (
+            <div
+              key={index}
+              className="glass-card flex h-20 w-20 items-center justify-center rounded-2xl p-3 md:h-24 md:w-24"
+            >
+              <Image
+                src={src}
+                alt={`Logo institucional ${index + 1}`}
+                width={90}
+                height={90}
+                className="max-h-full w-auto object-contain"
+              />
+            </div>
+          ))}
+        </div>
+
+        <div className="max-w-5xl">
+          <span className="title-pill mb-5">
             Matemáticas aplicadas a la ingeniería
-          </p>
+          </span>
 
-          <h2 className="text-4xl font-black leading-tight text-white md:text-6xl">
-            Aplicaciones del número π y sólidos de revolución en Ingeniería
-            Mecánica
-          </h2>
+          <div className="hero-band">
+            <h2 className="text-4xl leading-tight md:text-6xl">
+              Aplicaciones del <span>número π</span> y sólidos de revolución en
+              Ingeniería Mecánica
+            </h2>
+          </div>
 
-          <p className="mt-6 max-w-2xl text-base leading-7 text-slate-300 md:text-lg">
-            Esta aplicación web presenta usos del número pi dentro de la
-            ingeniería mecánica y explica el concepto de sólidos de revolución
-            mediante ejemplos visuales, conceptos clave y una experiencia
-            interactiva con un juego tipo culebrita.
+          <p className="mt-6 max-w-4xl text-lg font-semibold leading-8 text-white/95">
+            Esta aplicación web reúne conceptos, ejemplos y actividades
+            interactivas sobre el uso del número pi en la ingeniería mecánica,
+            así como una introducción a los sólidos de revolución desarrollados
+            dentro del proyecto integrador.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4">
-            <a
-              href="#aplicaciones"
-              className="rounded-xl bg-cyan-400 px-6 py-3 font-semibold text-slate-950 transition hover:bg-cyan-300"
-            >
-              Ver aplicaciones
+            <a href="#aplicaciones" className="btn-primary">
+              Explorar contenido
             </a>
-            <a
-              href="#juego"
-              className="rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
-            >
-              Probar juego
+            <a href="#juego" className="btn-secondary">
+              Ir al juego de π
             </a>
           </div>
         </div>

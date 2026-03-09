@@ -1,11 +1,316 @@
 @import "tailwindcss";
 
+:root {
+  --white: #ffffff;
+  --blue-900: #0f4fbf;
+  --blue-800: #226edf;
+  --blue-700: #3b8ef0;
+  --blue-100: #dff4ff;
+  --glass: rgba(255, 255, 255, 0.14);
+  --glass-border: rgba(255, 255, 255, 0.26);
+  --shadow: rgba(20, 54, 112, 0.16);
+
+  --background:
+    radial-gradient(circle at 14% 12%, rgba(255, 193, 77, 0.20), transparent 16%),
+    radial-gradient(circle at 86% 12%, rgba(255, 255, 255, 0.18), transparent 16%),
+    radial-gradient(circle at 76% 80%, rgba(118, 211, 255, 0.16), transparent 16%),
+    linear-gradient(180deg, #0f4fbf 0%, #2e80ea 38%, #bfe9ff 100%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
+html,
 body {
-  background: #020617;
-  color: white;
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
   font-family: Arial, Helvetica, sans-serif;
+  background: #d9ecff;
+}
+
+body {
+  color: var(--white);
+  background:
+    radial-gradient(circle at 14% 12%, rgba(255, 193, 77, 0.20), transparent 16%),
+    radial-gradient(circle at 86% 12%, rgba(255, 255, 255, 0.18), transparent 16%),
+    radial-gradient(circle at 76% 80%, rgba(118, 211, 255, 0.16), transparent 16%),
+    linear-gradient(180deg, #0f4fbf 0%, #2e80ea 38%, #bfe9ff 100%);
+  background-attachment: fixed;
+}
+
+/* Fondo decorativo global */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.10;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.75) 0.5px, transparent 0.8px);
+  background-size: 12px 12px;
+  mix-blend-mode: soft-light;
+  z-index: 0;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 85% 12%, rgba(255,182,72,0.75) 0%, rgba(255,182,72,0) 10%),
+    radial-gradient(circle at 78% 18%, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 16%),
+    radial-gradient(circle at 12% 82%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 18%);
+  filter: blur(10px);
+}
+
+main {
+  position: relative;
+  z-index: 1;
+}
+
+/* Selección */
+::selection {
+  background: rgba(255, 213, 61, 0.35);
+  color: #ffffff;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ffd94f 0%, #f1b61b 100%);
+  border-radius: 999px;
+}
+
+/* Enlaces */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Imágenes */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Utilidades visuales globales */
+.section-shell {
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  box-shadow: 0 12px 35px rgba(20, 54, 112, 0.16);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.soft-panel {
+  background: linear-gradient(145deg, rgba(255,255,255,0.18), rgba(255,255,255,0.04));
+  border: 1px solid rgba(255,255,255,0.22);
+  box-shadow: 0 12px 30px rgba(24, 54, 110, 0.14);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.title-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.30);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #eef8ff;
+}
+
+.hero-band {
+  width: fit-content;
+  max-width: 100%;
+  padding: 1rem 1.5rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(15,79,191,0.96), rgba(34,110,223,0.96));
+  box-shadow: 0 18px 40px rgba(10, 42, 104, 0.2);
+}
+
+.hero-band h1,
+.hero-band h2 {
+  margin: 0;
+  color: white;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.hero-band span {
+  color: #ffd53d;
+}
+
+/* Tarjetas generales */
+.card-pop {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  background: linear-gradient(145deg, rgba(255,255,255,0.18), rgba(255,255,255,0.03));
+  border: 1px solid rgba(255,255,255,0.22);
+  box-shadow: 0 18px 40px rgba(24, 54, 110, 0.14);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.card-pop::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(145deg, rgba(255,255,255,0.16), rgba(255,255,255,0.02));
+}
+
+.card-pop::after {
+  content: "";
+  position: absolute;
+  right: -12%;
+  bottom: -18%;
+  width: 180px;
+  height: 180px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 30% 70% 61% 39% / 38% 44% 56% 62%;
+  transform: rotate(-16deg);
+  pointer-events: none;
+}
+
+.card-pop > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Colores para tarjetas */
+.bg-blue-card {
+  background: linear-gradient(180deg, #2b97ff 0%, #3471dc 100%);
+}
+
+.bg-green-card {
+  background: linear-gradient(180deg, #39db8b 0%, #20b86b 100%);
+}
+
+.bg-yellow-card {
+  background: linear-gradient(180deg, #ffd94f 0%, #f1b61b 100%);
+}
+
+.bg-cyan-card {
+  background: linear-gradient(180deg, #62d1ff 0%, #30a6ef 100%);
+}
+
+.bg-orange-card {
+  background: linear-gradient(180deg, #ffaf56 0%, #fb7e2f 100%);
+}
+
+.bg-purple-card {
+  background: linear-gradient(180deg, #d098ff 0%, #aa5dff 100%);
+}
+
+/* Botones */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  padding: 0.9rem 1.3rem;
+  background: linear-gradient(180deg, #ffd94f 0%, #f1b61b 100%);
+  color: #0f172a;
+  font-weight: 800;
+  box-shadow: 0 12px 24px rgba(80, 60, 0, 0.18);
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.04);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  padding: 0.9rem 1.3rem;
+  background: rgba(255,255,255,0.16);
+  border: 1px solid rgba(255,255,255,0.24);
+  color: white;
+  font-weight: 800;
+  backdrop-filter: blur(10px);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.btn-secondary:hover {
+  transform: translateY(-1px);
+  background: rgba(255,255,255,0.22);
+}
+
+/* Tipografía general */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+  color: #ffffff;
+}
+
+p {
+  color: rgba(255, 255, 255, 0.96);
+}
+
+/* Tablero del juego */
+.game-board-shell {
+  border-radius: 2rem;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.22);
+  box-shadow: 0 16px 36px rgba(18, 54, 112, 0.12);
+  backdrop-filter: blur(10px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-band {
+    border-radius: 1.8rem;
+    padding: 1rem 1.1rem;
+  }
+
+  .card-pop::after {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+/* Impresión */
+@media print {
+  body {
+    background: white !important;
+  }
+
+  body::before,
+  body::after {
+    display: none !important;
+  }
 }
